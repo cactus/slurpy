@@ -18,7 +18,7 @@ import (
 
 const VERSION = "0.0.1"
 
-var matcher = regexp.MustCompile(`^(<(\d+)>)?(.*)`)
+var matcher = regexp.MustCompile(`^(?:<(\d+)>)?(.*)`)
 
 type SyslogMsg struct {
 	Priority int
@@ -42,7 +42,7 @@ func parseSyslogMsg(buf []byte) (*SyslogMsg, error) {
 	var prio int
 	var err error
 	if len(matches[2]) != 0 {
-		prio, err = strconv.Atoi(string(matches[2]))
+		prio, err = strconv.Atoi(string(matches[1]))
 		if err != nil {
 			return nil, errors.New("prio failed to convert")
 		}
@@ -55,7 +55,7 @@ func parseSyslogMsg(buf []byte) (*SyslogMsg, error) {
 		Priority: prio,
 		Facility: prio / 8,
 		Severity: prio % 8}
-	m.Msg = string(bytes.Trim(matches[3], "\n"))
+	m.Msg = string(bytes.Trim(matches[2], "\n"))
 	return m, nil
 }
 
