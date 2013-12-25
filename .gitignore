@@ -1,0 +1,8 @@
+/bin
+/setenv
+/config.json
+/pkg
+/src
+/test_internal
+/build
+/slurpy
