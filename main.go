@@ -3,11 +3,12 @@ package main
 import (
 	"fmt"
 	flags "github.com/jessevdk/go-flags"
-	"log"
+	"github.com/cactus/gologit"
 	"net"
 	"os"
 	"runtime"
 	"strconv"
+	"syscall"
 )
 
 const VERSION = "0.0.1"
@@ -56,26 +57,34 @@ func main() {
 		os.Exit(1)
 	}
 
+	// set logger debug level and start toggle on signal handler
+	logger := gologit.Logger
+	logger.Set(opts.Verbose)
+	logger.Debugln("Debug logging enabled")
+	logger.ToggleOnSignal(syscall.SIGUSR1)
+
 	ch := make(chan *SyslogMsg, 1024)
 	go chanByteReader(ch)
 
 	if opts.BindTCP != "" {
+		gologit.Println("Starting tcp server on", opts.BindTCP)
 		ltcp, err := net.Listen("tcp", opts.BindTCP)
 		if err != nil {
-			log.Fatal(err)
+			gologit.Fatal(err)
 		}
 		defer ltcp.Close()
 		go tcpAcceptor(ltcp, ch)
 	}
 
 	if opts.BindUDP != "" {
+		gologit.Println("Starting udp server on", opts.BindUDP)
 		addr, err := net.ResolveUDPAddr("udp", opts.BindUDP)
 		if err != nil {
-			log.Fatal(err)
+			gologit.Fatal(err)
 		}
 		ludp, err := net.ListenUDP("udp", addr)
 		if err != nil {
-			log.Fatal(err)
+			gologit.Fatal(err)
 		}
 		defer ludp.Close()
 		go udpAcceptor(ludp, ch)
