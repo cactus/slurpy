@@ -29,8 +29,8 @@ func main() {
 
 	// command line flags
 	var opts struct {
-		BindTCP string `long:"listen-tcp" default:"" description:"TCP address:port to listen to"`
-		BindUDP string `long:"listen-udp" default:"" description:"UDP address:port to listen to"`
+		BindTCP string `short:"t" long:"listen-tcp" default:"" description:"TCP address:port to listen to"`
+		BindUDP string `short:"u" long:"listen-udp" default:"" description:"UDP address:port to listen to"`
 		Verbose bool   `short:"v" long:"verbose" description:"Show verbose (debug) log level output"`
 		Version bool   `short:"V" long:"version" description:"print version and exit"`
 	}
