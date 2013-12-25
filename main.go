@@ -2,29 +2,29 @@ package main
 
 import (
 	//"net"
-	"strconv"
-	flags "github.com/jessevdk/go-flags"
-	"net"
-	"log"
 	"bufio"
 	"bytes"
-	"strings"
-	"os"
+	"errors"
 	"fmt"
+	flags "github.com/jessevdk/go-flags"
+	"log"
+	"net"
+	"os"
 	"regexp"
 	"runtime"
-	"errors"
+	"strconv"
+	"strings"
 )
 
-
 const VERSION = "0.0.1"
+
 var matcher = regexp.MustCompile(`^(<(\d+)>)?(.*)`)
 
 type SyslogMsg struct {
 	Priority int
 	Facility int
 	Severity int
-	Msg		 string
+	Msg      string
 }
 
 func chanByteReader(ch <-chan *SyslogMsg) {
@@ -32,7 +32,6 @@ func chanByteReader(ch <-chan *SyslogMsg) {
 		fmt.Printf("<%d> %s\n", m.Priority, m.Msg)
 	}
 }
-
 
 func parseSyslogMsg(buf []byte) (*SyslogMsg, error) {
 	matches := matcher.FindSubmatch(buf)
@@ -54,12 +53,11 @@ func parseSyslogMsg(buf []byte) (*SyslogMsg, error) {
 
 	m := &SyslogMsg{
 		Priority: prio,
-		Facility: prio/8,
+		Facility: prio / 8,
 		Severity: prio % 8}
 	m.Msg = string(bytes.Trim(matches[3], "\n"))
 	return m, nil
 }
-
 
 func udpAcceptor(pc *net.UDPConn, ch chan<- *SyslogMsg) {
 	buf := make([]byte, 1024)
@@ -80,7 +78,6 @@ func udpAcceptor(pc *net.UDPConn, ch chan<- *SyslogMsg) {
 		ch <- m
 	}
 }
-
 
 func handleConn(c net.Conn, ch chan<- *SyslogMsg) {
 	bufc := bufio.NewReader(c)
@@ -152,7 +149,6 @@ func tcpAcceptor(ln net.Listener, ch chan<- *SyslogMsg) {
 		go handleConn(conn, ch)
 	}
 }
-
 
 func main() {
 	var gmx int
