@@ -1,10 +1,10 @@
 package main
 
 import (
-	"regexp"
-	"errors"
-	"strconv"
 	"bytes"
+	"errors"
+	"regexp"
+	"strconv"
 )
 
 var matcher = regexp.MustCompile(`^(?:<(\d+)>)?(.*)`)
@@ -41,4 +41,3 @@ func parseSyslogMsg(buf []byte) (*SyslogMsg, error) {
 	m.Msg = string(bytes.TrimSpace(matches[2]))
 	return m, nil
 }
-

@@ -1,13 +1,13 @@
 package main
 
 import (
-	"fmt"
 	"bufio"
 	"bytes"
-	"strings"
-	"strconv"
-	"net"
+	"fmt"
 	"log"
+	"net"
+	"strconv"
+	"strings"
 )
 
 func udpAcceptor(pc *net.UDPConn, ch chan<- *SyslogMsg) {
@@ -100,4 +100,3 @@ func tcpAcceptor(ln net.Listener, ch chan<- *SyslogMsg) {
 		go handleConn(conn, ch)
 	}
 }
-
