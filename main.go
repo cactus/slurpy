@@ -55,7 +55,7 @@ func parseSyslogMsg(buf []byte) (*SyslogMsg, error) {
 		Priority: prio,
 		Facility: prio / 8,
 		Severity: prio % 8}
-	m.Msg = string(bytes.Trim(matches[2], "\n"))
+	m.Msg = string(bytes.TrimSpace(matches[2]))
 	return m, nil
 }
 
@@ -94,7 +94,7 @@ func handleConn(c net.Conn, ch chan<- *SyslogMsg) {
 				log.Println(err)
 				break
 			}
-			s = strings.Trim(s, " ")
+			s = strings.TrimSpace(s)
 			readsize, err := strconv.Atoi(s)
 			if err != nil {
 				log.Println(err)
@@ -125,7 +125,7 @@ func handleConn(c net.Conn, ch chan<- *SyslogMsg) {
 				log.Println(err)
 				break
 			}
-			result = bytes.Trim(result, " ")
+			result = bytes.TrimSpace(result)
 			if len(result) > 0 {
 				m, err := parseSyslogMsg(result)
 				if err != nil {
