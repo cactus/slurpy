@@ -4,7 +4,6 @@ import (
 	"fmt"
 	flags "github.com/jessevdk/go-flags"
 	"github.com/cactus/gologit"
-	"net"
 	"os"
 	"runtime"
 	"strconv"
@@ -13,10 +12,8 @@ import (
 
 const VERSION = "0.0.1"
 
-func chanByteReader(ch <-chan *SyslogMsg) {
-	for m := range ch {
-		fmt.Printf("<%d> %s\n", m.Priority, m.Msg)
-	}
+func chanByteReader(msg *SyslogMsg) {
+	fmt.Printf("<%d> %s\n", msg.Priority, msg.Msg)
 }
 
 func main() {
@@ -63,31 +60,21 @@ func main() {
 	logger.Debugln("Debug logging enabled")
 	logger.ToggleOnSignal(syscall.SIGUSR1)
 
-	ch := make(chan *SyslogMsg, 1024)
-	go chanByteReader(ch)
-
 	if opts.BindTCP != "" {
-		gologit.Println("Starting tcp server on", opts.BindTCP)
-		ltcp, err := net.Listen("tcp", opts.BindTCP)
+		tcpsrv, err := ListenTCP("tcp", opts.BindTCP, chanByteReader)
 		if err != nil {
 			gologit.Fatal(err)
 		}
-		defer ltcp.Close()
-		go tcpAcceptor(ltcp, ch)
+		defer tcpsrv.Close()
 	}
 
 	if opts.BindUDP != "" {
 		gologit.Println("Starting udp server on", opts.BindUDP)
-		addr, err := net.ResolveUDPAddr("udp", opts.BindUDP)
+		udpsrv, err := ListenUDP("udp", opts.BindUDP, chanByteReader)
 		if err != nil {
 			gologit.Fatal(err)
 		}
-		ludp, err := net.ListenUDP("udp", addr)
-		if err != nil {
-			gologit.Fatal(err)
-		}
-		defer ludp.Close()
-		go udpAcceptor(ludp, ch)
+		defer udpsrv.Close()
 	}
 	select {}
 }
