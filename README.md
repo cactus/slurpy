@@ -27,7 +27,7 @@ Help Options:
   -h, --help        Show this help message
 ~~~
 
-Example:
+Example running:
 
 ~~~
 $ ./slurpy --listen-tcp="127.0.0.1:1514" --listen-udp="127.0.0.1:1514"
