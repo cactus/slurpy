@@ -5,7 +5,8 @@ slurpy
 
 A syslog slurper. Currently slurps udp or tcp.
 
-It doesn't currently do anything other than print the output.
+It doesn't currently do anything other than parse the incoming syslog messages,
+and print the result.
 
 ### Links
 
