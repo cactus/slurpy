@@ -2,15 +2,15 @@ package main
 
 import (
 	"fmt"
-	flags "github.com/jessevdk/go-flags"
 	"github.com/cactus/gologit"
+	"github.com/cactus/slurpy/slurpylog"
+	flags "github.com/jessevdk/go-flags"
 	"os"
 	"os/signal"
 	"runtime"
 	"strconv"
-	"syscall"
 	"strings"
-	"github.com/cactus/slurpy/slurpylog"
+	"syscall"
 )
 
 const VERSION = "0.0.1"

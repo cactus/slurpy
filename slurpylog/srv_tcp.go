@@ -10,13 +10,12 @@ import (
 )
 
 type SyslogServerTCP struct {
-	Running      bool
-	ln			 net.Listener
-	handler      SyslogMsgHandler
-	SyslogCh     chan *SyslogMsg
-	Closing      chan bool
+	Running  bool
+	ln       net.Listener
+	handler  SyslogMsgHandler
+	SyslogCh chan *SyslogMsg
+	Closing  chan bool
 }
-
 
 func (t *SyslogServerTCP) handlerLoop() {
 	for {
@@ -137,7 +136,6 @@ func (t *SyslogServerTCP) Start() {
 	go t.acceptLoop()
 }
 
-
 func ListenTCP(proto string, inaddr string, handler SyslogMsgHandler) (*SyslogServerTCP, error) {
 	proto = strings.ToLower(proto)
 	ltcp, err := net.Listen(proto, inaddr)
@@ -150,4 +148,3 @@ func ListenTCP(proto string, inaddr string, handler SyslogMsgHandler) (*SyslogSe
 	go srv.Start()
 	return srv, nil
 }
-

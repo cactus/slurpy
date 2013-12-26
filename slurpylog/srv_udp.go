@@ -7,11 +7,11 @@ import (
 )
 
 type SyslogServerUDP struct {
-	Running      bool
-	pc			 *net.UDPConn
-	handler      SyslogMsgHandler
-	SyslogCh     chan *SyslogMsg
-	Closing      chan bool
+	Running  bool
+	pc       *net.UDPConn
+	handler  SyslogMsgHandler
+	SyslogCh chan *SyslogMsg
+	Closing  chan bool
 }
 
 // Reads from a udp socket, parses syslog messages, and sends them

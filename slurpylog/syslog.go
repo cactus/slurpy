@@ -9,7 +9,7 @@ import (
 
 var matcher = regexp.MustCompile(`^(?:<(\d+)>)?(.*)`)
 
-var severityMap = map[int]string {
+var severityMap = map[int]string{
 	0: "EMERG",
 	1: "ALERT",
 	2: "CRIT",
@@ -20,7 +20,7 @@ var severityMap = map[int]string {
 	7: "DEBUG",
 }
 
-var facilityMap = map[int]string {
+var facilityMap = map[int]string{
 	0:   "KERN",
 	8:   "USER",
 	16:  "MAIL",
