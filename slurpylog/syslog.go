@@ -5,7 +5,6 @@ import (
 	"errors"
 	"regexp"
 	"strconv"
-	"github.com/cactus/gologit"
 )
 
 var matcher = regexp.MustCompile(`^(?:<(\d+)>)?(.*)`)
