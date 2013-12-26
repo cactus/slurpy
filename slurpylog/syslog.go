@@ -10,6 +10,7 @@ import (
 
 var matcher = regexp.MustCompile(
 	`^(?:<(\d+)>)?(\w{3}  ?\d{1,2} \d{2}:\d{2}:\d{2}) ([^ ]+) ([^ \[\]]+)(?:\[(\d+)\])?:(.*)`)
+
 const dateformat = "Jan _2 15:04:05"
 
 var severityMap = map[int]string{
@@ -118,14 +119,14 @@ func parseSyslogMsg(buf []byte) (*SyslogMsg, error) {
 	msg := string(bytes.TrimSpace(matches[6]))
 
 	m := &SyslogMsg{
-		Priority: prio,
-		Severity: prio % 8,
-		Facility: prio - (prio % 8),
-		Host: host,
-		DateTime: datetime,
-		ProcName: procname,
-		Pid: pid,
-		Msg: msg,
+		Priority:    prio,
+		Severity:    prio % 8,
+		Facility:    prio - (prio % 8),
+		Host:        host,
+		DateTime:    datetime,
+		ProcName:    procname,
+		Pid:         pid,
+		Msg:         msg,
 		OriginalTxt: matches[0]}
 	return m, nil
 }
