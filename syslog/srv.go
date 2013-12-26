@@ -1,4 +1,4 @@
-package main
+package syslog
 
 type SyslogMsgHandler func (*SyslogMsg)
 
