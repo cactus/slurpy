@@ -1,4 +1,4 @@
-package syslog
+package slurpylog
 
 import (
 	"bytes"

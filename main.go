@@ -9,12 +9,12 @@ import (
 	"runtime"
 	"strconv"
 	"syscall"
-	"github.com/cactus/slurpy/syslog"
+	"github.com/cactus/slurpy/slurpylog"
 )
 
 const VERSION = "0.0.1"
 
-func chanByteReader(msg *syslog.SyslogMsg) {
+func chanByteReader(msg *slurpylog.SyslogMsg) {
 	fmt.Printf("<%d> %s\n", msg.Priority, msg.Msg)
 }
 
@@ -64,7 +64,7 @@ func main() {
 
 	if opts.BindTCP != "" {
 		gologit.Println("Starting tcp server on", opts.BindTCP)
-		tcpsrv, err := syslog.ListenTCP("tcp", opts.BindTCP, chanByteReader)
+		tcpsrv, err := slurpylog.ListenTCP("tcp", opts.BindTCP, chanByteReader)
 		if err != nil {
 			gologit.Fatal(err)
 		}
@@ -73,7 +73,7 @@ func main() {
 
 	if opts.BindUDP != "" {
 		gologit.Println("Starting udp server on", opts.BindUDP)
-		udpsrv, err := syslog.ListenUDP("udp", opts.BindUDP, chanByteReader)
+		udpsrv, err := slurpylog.ListenUDP("udp", opts.BindUDP, chanByteReader)
 		if err != nil {
 			gologit.Fatal(err)
 		}
