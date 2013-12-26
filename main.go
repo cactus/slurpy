@@ -9,6 +9,7 @@ import (
 	"runtime"
 	"strconv"
 	"syscall"
+	"strings"
 	"github.com/cactus/slurpy/slurpylog"
 )
 
@@ -17,7 +18,7 @@ const VERSION = "0.0.1"
 func chanByteReader(msg *slurpylog.SyslogMsg) {
 	facName, _ := slurpylog.FacilityGetName(msg.Facility)
 	sevName, _ := slurpylog.SeverityGetName(msg.Severity)
-	fmt.Printf("%s.%s %s\n", facName, sevName, msg.Priority, msg.Msg)
+	fmt.Printf("%s.%s %s\n", strings.ToLower(facName), strings.ToLower(sevName), msg.Msg)
 }
 
 func main() {

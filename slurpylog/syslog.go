@@ -5,42 +5,43 @@ import (
 	"errors"
 	"regexp"
 	"strconv"
+	"github.com/cactus/gologit"
 )
 
 var matcher = regexp.MustCompile(`^(?:<(\d+)>)?(.*)`)
 
-var facilityMap = map[int]string {
-	0: "LOG_EMERG",
-	1: "LOG_ALERT",
-	2: "LOG_CRIT",
-	3: "LOG_ERR",
-	4: "LOG_WARNING",
-	5: "LOG_NOTICE",
-	6: "LOG_INFO",
-	7: "LOG_DEBUG",
+var severityMap = map[int]string {
+	0: "EMERG",
+	1: "ALERT",
+	2: "CRIT",
+	3: "ERR",
+	4: "WARNING",
+	5: "NOTICE",
+	6: "INFO",
+	7: "DEBUG",
 }
 
-var severityMap = map[int]string {
-	0:   "LOG_KERN",
-	8:   "LOG_USER",
-	16:  "LOG_MAIL",
-	24:  "LOG_DAEMON",
-	32:  "LOG_AUTH",
-	40:  "LOG_SYSLOG",
-	48:  "LOG_LPR",
-	56:  "LOG_NEWS",
-	64:  "LOG_UUCP",
-	72:  "LOG_CRON",
-	80:  "LOG_AUTHPRIV",
-	88:  "LOG_FTP",
-	128: "LOG_LOCAL0",
-	136: "LOG_LOCAL1",
-	144: "LOG_LOCAL2",
-	152: "LOG_LOCAL3",
-	160: "LOG_LOCAL4",
-	168: "LOG_LOCAL5",
-	176: "LOG_LOCAL6",
-	184: "LOG_LOCAL7",
+var facilityMap = map[int]string {
+	0:   "KERN",
+	8:   "USER",
+	16:  "MAIL",
+	24:  "DAEMON",
+	32:  "AUTH",
+	40:  "SYSLOG",
+	48:  "LPR",
+	56:  "NEWS",
+	64:  "UUCP",
+	72:  "CRON",
+	80:  "AUTHPRIV",
+	88:  "FTP",
+	128: "LOCAL0",
+	136: "LOCAL1",
+	144: "LOCAL2",
+	152: "LOCAL3",
+	160: "LOCAL4",
+	168: "LOCAL5",
+	176: "LOCAL6",
+	184: "LOCAL7",
 }
 
 func FacilityGetName(facility int) (string, error) {
@@ -58,8 +59,6 @@ func SeverityGetName(severity int) (string, error) {
 	}
 	return name, nil
 }
-
-
 
 type SyslogMsg struct {
 	Priority int
@@ -88,8 +87,8 @@ func parseSyslogMsg(buf []byte) (*SyslogMsg, error) {
 
 	m := &SyslogMsg{
 		Priority: prio,
-		Facility: prio / 8,
-		Severity: prio % 8}
+		Severity: prio % 8,
+		Facility: prio - (prio % 8)}
 	m.Msg = string(bytes.TrimSpace(matches[2]))
 	return m, nil
 }
