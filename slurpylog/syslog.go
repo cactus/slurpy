@@ -4,14 +4,13 @@ import (
 	"bytes"
 	"errors"
 	"regexp"
-	"fmt"
 	"strconv"
 	"time"
 )
 
 var matcher = regexp.MustCompile(
 	`^(?:<(\d+)>)?(\w{3}  ?\d{1,2} \d{2}:\d{2}:\d{2}) ([^ ]+) ([^ \[\]]+)(?:\[(\d+)\])?:(.*)`)
-const dateformat = "2006 Jan _2 15:04:05"
+const dateformat = "Jan _2 15:04:05"
 
 var severityMap = map[int]string{
 	0: "EMERG",
@@ -95,8 +94,7 @@ func parseSyslogMsg(buf []byte) (*SyslogMsg, error) {
 
 	var datetime time.Time
 	if len(matches[2]) != 0 {
-		dateWithYear := fmt.Sprintf("%d %s", time.Now().Year(), string(matches[2]))
-		datetime, _ = time.Parse(dateformat, dateWithYear)
+		datetime, _ = time.Parse(dateformat, string(matches[2]))
 	}
 
 	var host string
