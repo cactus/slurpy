@@ -15,7 +15,9 @@ import (
 const VERSION = "0.0.1"
 
 func chanByteReader(msg *slurpylog.SyslogMsg) {
-	fmt.Printf("<%d> %s\n", msg.Priority, msg.Msg)
+	facName := slurpylog.FacilityGetName(msg.Facility)
+	sevName := slurpylog.SeverityGetName(msg.Severity)
+	fmt.Printf("%s.%s %s\n", facName, sevName, msg.Priority, msg.Msg)
 }
 
 func main() {
