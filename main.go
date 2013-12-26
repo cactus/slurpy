@@ -5,6 +5,7 @@ import (
 	flags "github.com/jessevdk/go-flags"
 	"github.com/cactus/gologit"
 	"os"
+	"os/signal"
 	"runtime"
 	"strconv"
 	"syscall"
@@ -61,6 +62,7 @@ func main() {
 	logger.ToggleOnSignal(syscall.SIGUSR1)
 
 	if opts.BindTCP != "" {
+		gologit.Println("Starting tcp server on", opts.BindTCP)
 		tcpsrv, err := ListenTCP("tcp", opts.BindTCP, chanByteReader)
 		if err != nil {
 			gologit.Fatal(err)
@@ -76,5 +78,9 @@ func main() {
 		}
 		defer udpsrv.Close()
 	}
-	select {}
+	closeSig := make(chan os.Signal, 1)
+	signal.Notify(closeSig, os.Interrupt)
+	s := <-closeSig
+	gologit.Printf("got signal: %s. Closing.\n", s)
+	return
 }
