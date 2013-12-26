@@ -4,10 +4,14 @@ import (
 	"bytes"
 	"errors"
 	"regexp"
+	"fmt"
 	"strconv"
+	"time"
 )
 
-var matcher = regexp.MustCompile(`^(?:<(\d+)>)?(.*)`)
+var matcher = regexp.MustCompile(
+	`^(?:<(\d+)>)?(\w{3}  ?\d{1,2} \d{2}:\d{2}:\d{2}) ([^ ]+) ([^ \[\]]+)(?:\[(\d+)\])?:(.*)`)
+const dateformat = "2006 Jan _2 15:04:05"
 
 var severityMap = map[int]string{
 	0: "EMERG",
@@ -60,10 +64,15 @@ func SeverityGetName(severity int) (string, error) {
 }
 
 type SyslogMsg struct {
-	Priority int
-	Facility int
-	Severity int
-	Msg      string
+	Priority    int
+	Facility    int
+	Severity    int
+	Pid         int
+	Host        string
+	DateTime    time.Time
+	ProcName    string
+	Msg         string
+	OriginalTxt []byte
 }
 
 func parseSyslogMsg(buf []byte) (*SyslogMsg, error) {
@@ -84,10 +93,41 @@ func parseSyslogMsg(buf []byte) (*SyslogMsg, error) {
 		prio = 13
 	}
 
+	var datetime time.Time
+	if len(matches[2]) != 0 {
+		dateWithYear := fmt.Sprintf("%d %s", time.Now().Year(), string(matches[2]))
+		datetime, _ = time.Parse(dateformat, dateWithYear)
+	}
+
+	var host string
+	if len(matches[3]) != 0 {
+		host = string(matches[3])
+	}
+
+	var procname string
+	if len(matches[4]) != 0 {
+		procname = string(matches[4])
+	}
+
+	var pid int
+	if len(matches[5]) != 0 {
+		pid, err = strconv.Atoi(string(matches[5]))
+		if err != nil {
+			return nil, errors.New("pid failed to convert")
+		}
+	}
+
+	msg := string(bytes.TrimSpace(matches[6]))
+
 	m := &SyslogMsg{
 		Priority: prio,
 		Severity: prio % 8,
-		Facility: prio - (prio % 8)}
-	m.Msg = string(bytes.TrimSpace(matches[2]))
+		Facility: prio - (prio % 8),
+		Host: host,
+		DateTime: datetime,
+		ProcName: procname,
+		Pid: pid,
+		Msg: msg,
+		OriginalTxt: matches[0]}
 	return m, nil
 }
