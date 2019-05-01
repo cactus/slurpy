@@ -49,3 +49,8 @@ Example rsyslog config to forward to slurpy:
 *   [RFC-3164](http://tools.ietf.org/html/rfc3164) - "The BSD syslog Protocol"
 *   [RFC-6587](http://tools.ietf.org/html/rfc6587) - "Transmission of Syslog Messages over TCP"
 
+## License
+
+Released under an [ISC license][1]. See `LICENSE.md` file for details.
+
+[1]: https://choosealicense.com/licenses/isc/
