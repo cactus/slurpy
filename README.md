@@ -5,7 +5,7 @@ slurpy
 
 A syslog slurper. Currently slurps udp or tcp.
 
-[![Build Status](https://travis-ci.org/cactus/slurpy.png?branch=master)](https://travis-ci.org/cactus/slurpy)
+[![Build Status](https://github.com/cactus/slurpy/workflows/unit-tests/badge.svg)](https://github.com/cactus/slurpy/actions)
 
 It doesn't currently do anything other than parse the incoming syslog messages,
 and print the result.
